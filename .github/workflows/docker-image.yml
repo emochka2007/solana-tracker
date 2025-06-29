@@ -21,11 +21,12 @@ jobs:
       - name: Run Docker container
         run: |
           docker run --rm  \
+          -e RUST_LOG="debug" \
           -e WAKA_KEY=${{ secrets.WAKA_KEY }} \
           -e KEYPAIR=${{ secrets.KEYPAIR }} \
-          -e RUST_LOG="debug" \
           -e BURN_ID=${{ secrets.BURN_ID }} \
           -e VAULT_ID=${{ secrets.VAULT_ID }} \
+          -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
           -e RPC_URL=${{ secrets.RPC_URL }} \
           -e CLUSTER=${{ secrets.CLUSTER }} \
           -e FEE_LAMPORTS_AMOUNT=${{ secrets.FEE_LAMPORTS_AMOUNT }} \
