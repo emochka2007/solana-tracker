@@ -5,7 +5,7 @@ ARG APP_NAME=devopsvn
 
 WORKDIR /build
 
-COPY Cargo.lock Cargo.toml ./
+COPY app/Cargo.lock Cargo.toml ./
 RUN mkdir src \
     && echo "// dummy file" > src/lib.rs \
     && cargo build --release

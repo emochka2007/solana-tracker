@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-tracker = "rS9PUxa2aE2XmEMVXSkx6owFpGyiVjpBfYCVMD5Yy9v"
+#tracker = "rS9PUxa2aE2XmEMVXSkx6owFpGyiVjpBfYCVMD5Yy9v"
 
 [registry]
 url = "https://api.apr.dev"

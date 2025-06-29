@@ -1,3 +1,4 @@
+use crate::config::AppConfig;
 use crate::waka_types::ApiResponse;
 use anyhow::anyhow;
 use reqwest::Client;
@@ -10,9 +11,9 @@ pub struct WakaClient {
 }
 
 impl WakaClient {
-    pub fn new() -> Self {
+    pub fn new(config: &AppConfig) -> Self {
         Self {
-            key: env::var("WAKA_KEY").unwrap(),
+            key: config.waka_key.clone(),
             base_url: "https://wakatime.com/api/v1".to_string(),
         }
     }
