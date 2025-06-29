@@ -12,22 +12,20 @@ use tracing::info;
 pub struct SolClient {
     rpc_client: RpcClient,
     anchor_client: AnchorClient<Rc<Keypair>>,
-    keypair: Keypair,
     vault_pda: Pubkey,
 }
 impl SolClient {
     pub fn new(config: &AppConfig) -> anyhow::Result<Self> {
         let client = RpcClient::new(config.rpc_url.clone());
-        let keypair = read_keypair_file(config.keypair_path.clone())
-            .map_err(|e| anyhow!("Failed to read keypair: {}", e))?;
-        let anchor_client =
-            AnchorClient::new(config.cluster.clone(), Rc::new(keypair.insecure_clone()));
+        let anchor_client = AnchorClient::new(
+            config.cluster.clone(),
+            Rc::new(config.keypair.insecure_clone()),
+        );
         let vault_pda = derive_vault_pda(&config.vault_id, &config.client_id);
 
         Ok(Self {
             rpc_client: client,
             anchor_client,
-            keypair,
             vault_pda,
         })
     }
@@ -52,12 +50,12 @@ impl SolClient {
     pub async fn fund_wallet(&self, amount: u64, config: &AppConfig) -> anyhow::Result<()> {
         let vault_pda_derived = derive_vault_pda(&config.vault_id, &config.client_id);
         info!("{:?}", vault_pda_derived);
-        let ix = transfer(&self.keypair.pubkey(), &vault_pda_derived, amount);
+        let ix = transfer(&config.keypair.pubkey(), &vault_pda_derived, amount);
         let recent_blockhash = &self.rpc_client.get_latest_blockhash().await?;
         let tx = Transaction::new_signed_with_payer(
             &[ix],
-            Some(&self.keypair.pubkey()),
-            &[&self.keypair],
+            Some(&config.keypair.pubkey()),
+            &[&config.keypair],
             recent_blockhash.clone(),
         );
 

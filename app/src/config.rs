@@ -1,6 +1,8 @@
+use crate::helpers::from_bytes_to_key_pair;
 use anchor_client::anchor_lang::prelude::Pubkey;
 use anchor_client::Cluster;
 use anyhow::anyhow;
+use solana_sdk::signature::Keypair;
 use std::env;
 use std::str::FromStr;
 
@@ -8,7 +10,7 @@ pub struct AppConfig {
     pub(crate) vault_id: Pubkey,
     pub(crate) client_id: Pubkey,
     pub(crate) burn_id: Pubkey,
-    pub(crate) keypair_path: String,
+    pub(crate) keypair: Keypair,
     pub(crate) rpc_url: String,
     pub(crate) cluster: Cluster,
     pub(crate) fee_amount: u64,
@@ -22,13 +24,13 @@ impl AppConfig {
         let client_id = Pubkey::from_str(&env::var("CLIENT_ID")?)?;
         let burn_id = Pubkey::from_str(&env::var("BURN_ID")?)?;
         let rpc_url = env::var("RPC_URL")?;
-        let keypair_path = env::var("KEYPAIR_PATH")?;
+        let keypair = env::var("KEYPAIR")?;
         let cluster = Self::get_cluster()?;
         let withdraw_amount = env::var("FEE_LAMPORTS_AMOUNT")?.parse::<u64>()?;
         Ok(Self {
             vault_id,
             client_id,
-            keypair_path,
+            keypair: from_bytes_to_key_pair(keypair),
             rpc_url,
             cluster,
             fee_amount: withdraw_amount,

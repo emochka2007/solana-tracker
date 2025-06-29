@@ -1,41 +1,32 @@
 name: Scheduled Docker Run
 
-# 1) Triggers
 on:
-  # Cron schedule runs at 03:00 UTC every day
   schedule:
     - cron: '0 3 * * *'
-  # Also allow manual runs via “Run workflow” button
   workflow_dispatch:
 
 jobs:
   spin_up:
-    # 2) Use a Linux runner
     runs-on: ubuntu-latest
-
     steps:
-      # 3) (Optional) If you need your repo’s Dockerfile
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 4) Build image locally
       - name: Build Docker image
         run: |
           docker build \
             -t solana-tracker:latest \
             .
 
-      # 5) (Optional) Push to Docker Hub / ECR / GHCR
-      #- name: Log in to registry
-      #  run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
-      #- name: Push
-      #  run: docker push myorg/my-app:latest
-
-      # 6) Run the container
       - name: Run Docker container
         run: |
           docker run --rm  \
-          -e WAKA_KEY=$WAKA_KEY \
-          -e PRIVATE_KEY=$PRIVATE_KEY \
+          -e WAKA_KEY=${{ secrets.WAKA_KEY }} \
+          -e KEYPAIR=${{ secrets.KEYPAIR }} \
+          -e RUST_LOG="debug" \
+          -e BURN_ID=${{ secrets.BURN_ID }} \
+          -e VAULT_ID=${{ secrets.VAULT_ID }} \
+          -e RPC_URL=${{ secrets.RPC_URL }} \
+          -e CLUSTER=${{ secrets.CLUSTER }} \
+          -e FEE_LAMPORTS_AMOUNT=${{ secrets.FEE_LAMPORTS_AMOUNT }} \
           solana-tracker:latest
-          

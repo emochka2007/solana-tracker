@@ -1,1 +1,2 @@
 - sync with sol/usd and burn 10 usd in SOL
+- dockerfile with workflow
