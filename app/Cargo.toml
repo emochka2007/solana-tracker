@@ -17,6 +17,7 @@ solana-sdk = "2.2.1"
 anchor-client = { version = "0.31.1", features = ["async"] }
 tracker = { path = "../programs/tracker" }
 solana-system-interface = "1.0.0"
+clap = { version = "4.5.40", features = ["derive"] }
 
 [[bin]]
 name = "sol-tracker"

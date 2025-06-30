@@ -15,6 +15,7 @@ pub struct AppConfig {
     pub(crate) cluster: Cluster,
     pub(crate) fee_amount: u64,
     pub(crate) waka_key: String,
+    pub(crate) is_cli: bool,
 }
 
 impl AppConfig {
@@ -27,6 +28,7 @@ impl AppConfig {
         let keypair = env::var("KEYPAIR")?;
         let cluster = Self::get_cluster()?;
         let withdraw_amount = env::var("FEE_LAMPORTS_AMOUNT")?.parse::<u64>()?;
+        let is_cli = env::var("CLI").unwrap_or(String::from("false"));
         Ok(Self {
             vault_id,
             client_id,
@@ -36,6 +38,7 @@ impl AppConfig {
             fee_amount: withdraw_amount,
             burn_id,
             waka_key,
+            is_cli: is_cli == String::from("true"),
         })
     }
 
